@@ -1,0 +1,6 @@
+README.md
+setup.py
+hdtools.egg-info/PKG-INFO
+hdtools.egg-info/SOURCES.txt
+hdtools.egg-info/dependency_links.txt
+hdtools.egg-info/top_level.txt
