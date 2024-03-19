@@ -1,4 +1,4 @@
 build/*
 *.egg-info/*
-**/user-specific/**
+**/user_specific/**
 **/*.pyc
