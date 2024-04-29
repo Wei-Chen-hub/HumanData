@@ -15,7 +15,7 @@ HumanData = HumanData.from_npz('path/to/humandata.npz')
 
 Keys include:
 
-- 'dataset': Name of dataset, string, see [supported list](/converter/supported_dataset.md).
+- 'dataset': Name of dataset, string, see [Supported List](/converter/supported_dataset.md).
 
 - 'subset': Name of subset, string, including `['train', 'val', 'test']` and other dataset-specific subsets.
 
@@ -44,11 +44,55 @@ Defines the annotations included in this HumanData, keys include, if any key is 
 
 - 'temporal': list, recording what temporal information is included, should be a sublist of ['frame_id', 'track_id', 'camera_view', 'sequence_name']
 
-## Data Paths
+## Data Paths - `HumanData['path']`
 
-## Smpl / Smplx Parameters
+Align with `HumanData['config']['path']`, for example
+
+- 'image': list of image path, real image path should be
+    ```
+    os.path.join('<your dataset base dir>', HumanData['metadata']['dataset'], HumanData['path']['image'][0])
+    ```
+
+## Human Pose and Shape- `HumanData['smpl']/['smplx']`
+
+A dict, which name aligns with config, in one of the following format:
+
+- 'smpl': 
+    ```
+    HumanData['smpl'] = {
+            'body_pose': (N, 69),
+            'betas': (N, 10),
+            'global_orient': (N, 3),
+            'transl': (N, 3)}
+    ```
+- 'smplx':
+    ```
+    HumanData['smplx'] = {
+            'betas': (N, 10),
+            'transl': (N, 3),
+            'global_orient': (N, 3),
+            'body_pose': (N, 21, 3),
+            'left_hand_pose': (N, 15, 3),
+            'right_hand_pose': (N, 15, 3),
+            'leye_pose'*: (N, 3),
+            'reye_pose'*: (N, 3),
+            'jaw_pose'*: (N, 3),
+            'expression'*: (N, 10)}
+    ```
+
+Some dataset with smplx annotations may not have all the keys, possible missing keys are marked with `*`.
+
+Additional keys:
+
+- 'source': should be one of ['']
+
+
+Some dataset may have additional valid keys, including `['待补充']`, these will be stored in a 0-1 list.
 
 ## Keypoint Annotations
+
+
+
 
 ## Bounding Box
 
