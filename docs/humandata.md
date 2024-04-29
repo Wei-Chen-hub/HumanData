@@ -19,11 +19,11 @@ Keys include:
 
 - 'subset': Name of subset, string, including `['train', 'val', 'test']` and other dataset-specific subsets.
 
-- 'datatype': 要加这个吗
-
 - 'date': Date of HumanData creation
 
-- 'slice': Slice id of HumanData, if a dataset is very large and needs to be split into smaller parts. If not applicable, set to `-1`.
+- 'slice_number': Number of slices of HumanData, if a dataset is very large and needs to be split into smaller parts. If not applicable, set to `1`.
+
+- 'slice_id': Slice id of HumanData file.
 
 - 'version': Version of HumanData, see version changes in [Change Log](/converter/supported_dataset.md#version-changes).
 
@@ -43,6 +43,8 @@ Defines the annotations included in this HumanData, keys include, if any key is 
 - 'camera': list, recording what camera information is included, should be a sublist of ['intrinsics', 'extrinsics']
 
 - 'temporal': list, recording what temporal information is included, should be a sublist of ['frame_id', 'track_id', 'camera_view', 'sequence_name']
+
+- 'dataset_specific': list, recording what dataset-specific information is included, should be a list.
 
 ## Data Paths - `HumanData['path']`
 
@@ -82,22 +84,47 @@ A dict, which name aligns with config, in one of the following format:
 
 Some dataset with smplx annotations may not have all the keys, possible missing keys are marked with `*`.
 
-Additional keys:
-
-- 'source': should be one of ['']
-
-
-Some dataset may have additional valid keys, including `['待补充']`, these will be stored in a 0-1 list.
-
 ## Keypoint Annotations
 
+Depending on the dataset, can include several keypoints, where K is the number of keypoints, and the last element of 3d keypoints is the confidence score.
 
+- '2d': (N, K, 3)
+- '2d_convention': string, the name of keypoints convention
+- '3d': (N, K, 4)
+- '3d_convention': string, the name of keypoints convention
+- '2d_smpl': (N, 45, 3)
+- '3d_smpl': (N, 45, 4)
+- '2d_smplx': (N, 144, 3)
+- '3d_smplx': (N, 144, 4)
 
+## Bounding Box - `HumanData['bbox']`
 
-## Bounding Box
+All bounding box should be in format of (N, 5), with the first 4 elements as **[x1, y1, w, h]**, and the last element as the confidence score.
 
-## Camera Information
+- 'body'
+- 'head'
+- 'left_hand'
+- 'right_hand'
 
-## Temporal Information
+## Camera Information - `HumanData['camera']`
+
+Camera follows opencv format, with the following keys:
+
+- 'intrinsics': (N, 3, 3)
+- 'extrinsics': (N, 4, 4)
+
+## Temporal Information - `HumanData['temporal']`
+
+Track id will be same across different camera views.
+
+- 'frame_id': (N, 1)
+- 'track_id': (N, 1)
+- 'camera_view': (N, 1)
+- 'sequence_name': (N, 1)
+
+## Dataset Specific Information - `HumanData['dataset_specific']`
+
+Keys align with `HumanData['config']['dataset_specific']`, each key is a string (0-1 mask), with keys align with the corresponding config.
+
 
 ## (Contact) - to be updated
