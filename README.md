@@ -1,19 +1,25 @@
 # HumanData and Related Tools
-A data structure designed to support Multi-Human, Temporal data in Camera Space.
+A data structure designed to support Multi-Human, Temporal data in Camera Space. 
 
 # Sections
-- [HumanData Converters](#humandata)
-
-  Raw data to HumanData
-
-- [Post Processing](#post-processing)
+- Converters - Raw data to HumanData 
+  
+  [HumanData format](/docs/humandata.md)
+  
+- Post Processing
 
   Post processing tools for HumanData
 
-- [Loading](#loading)
+  Gender Neutral Betas, etc.
+
+- Loading
 
   Loading HumanData for various task
 
-- [Visualisation](#visualisation)
+- Visualisation
 
     Visualisation tools for HumanData
+
+- Utils
+
+    Annotation downloading etc.
