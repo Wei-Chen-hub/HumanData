@@ -112,6 +112,8 @@ Camera follows opencv format, with the following keys:
 
 - 'intrinsics': (N, 3, 3)
 - 'extrinsics': (N, 4, 4)
+- 'width': (N, 1), image width
+- 'height': (N, 1), image height
 
 ## Temporal Information - `HumanData['temporal']`
 
