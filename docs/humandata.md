@@ -44,7 +44,7 @@ Defines the annotations included in this HumanData, keys include, if any key is 
 
 - 'temporal': list, recording what temporal information is included, should be a sublist of ['frame_id', 'track_id', 'camera_view', 'sequence_name']
 
-- 'dataset_specific': list, recording what dataset-specific information is included, should be a list.
+- 'specific': list, recording what dataset-specific information is included, should be a list.
 
 ## Data Paths - `HumanData['path']`
 
@@ -122,9 +122,9 @@ Track id will be same across different camera views.
 - 'camera_view': (N, 1)
 - 'sequence_name': (N, 1)
 
-## Dataset Specific Information - `HumanData['dataset_specific']`
+## Dataset Specific Information - `HumanData['specific']`
 
-Keys align with `HumanData['config']['dataset_specific']`, each key is a string (0-1 mask), with keys align with the corresponding config.
+Keys align with `HumanData['config']['specific']`, each key is a string (0-1 mask), with keys align with the corresponding config.
 
 
 ## (Contact) - to be updated
