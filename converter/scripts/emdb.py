@@ -41,56 +41,93 @@ class EmdbConverter(BaseModeConverter):
             'transl': 'trans',
             'global_orient': 'poses_root',
             'body_pose': 'poses_body',}
+        self.smpl_config = {
+            'num_betas': 10,
+            'use_pca': False,
+            'batch_size': 1,}
         
         super(EmdbConverter, self).__init__(modes)
 
 
-    def convert_by_mode(self, dataset_path: str, out_path: str,
-                        mode: str, **kwargs) -> dict:
+    def convert_by_mode(self, dataset_path: str, out_path: str, mode: str, 
+                        human_model_path: str, **kwargs) -> dict:
         print('Converting EMDB dataset...')
 
-        # parse sequences
-        seqs = glob.glob(os.path.join(dataset_path, 'P*', '*_*'))
+        # ----------------metadata----------------
+
+        # prepare metadata
+        metadata = {}
+        metadata['dataset'] = mode
+        metadata['date'] = '20240702'
+        metadata['slice_number'] = 1
+        metadata['slice_id'] = 1
+        metadata['version'] = '1.0'
+
+        # prepare config
+        config = {}
+        config['model'] = 'smpl'
+        config['path'] = ['image']
+        config['keypoints'] = ['2d', '3d', '2d_smpl', '3d_smpl']
+        config['bbox'] = ['body', 'head', 'left_hand', 'right_hand']
+        config['camera'] = ['intrinsics', 'extrinsics']
+        config['temporal'] = ['frame_id', 'track_id', 'camera_view', 'sequence_name']
+
+        # ----------------create body model----------------
 
         # build smpl model
-        smpl_gendered = {}
+        body_model_gendered = {}
         for gender in ['male', 'female', 'neutral']:
-            smpl_gendered[gender] = build_body_model(
-                dict(
-                    type='SMPL',
-                    keypoint_src='smpl_45',
-                    keypoint_dst='smpl_45',
-                    model_path='data/body_models/smpl',
-                    gender=gender,
-                    num_betas=10,
-                    use_pca=False,
-                    batch_size=1)).to(self.device)
+            kwargs = self.smpl_config.copy()
+            kwargs['gender'] = gender
+
+            body_model_gendered[gender] = smplx.create(
+                model_type='smpl',
+                model_path=human_model_path,
+                **kwargs).to(self.device)
             
+        pdb.set_trace()
+
+        # ----------------initialize----------------
+
         # use HumanData to store the data
         human_data = HumanData()
 
-        # initialize
-        smpl_ = {}
+        # initialize dict
+        path_dict = {}
+        for path_key in config['path']:
+            path_dict[key] = []
+        kps_dict = {}
+        for kps_key in config['keypoints']:
+            kps_dict[kps_key] = []
+        bbox_dict = {}
+        for bbox_key in config['bbox']:
+            bbox_dict[bbox_key] = []
+        camera_dict = {}
+        for camera_key in config['camera']:
+            camera_dict[camera_key] = []
+        temporal_dict = {}
+        for temporal_key in config['temporal']:
+            temporal_dict[temporal_key] = []
+        
+        # smpl or smplx dict here
+        smpl_dict = {}
         for key in self.smpl_shape.keys():
-            smpl_[key] = []
-        bboxs_ = {}
-        for key in ['bbox_xywh']:  
-            bboxs_[key] = []
-        image_path_, keypoints2d_original_ = [], []
-        keypoints2d_smpl_, keypoints3d_smpl_ = [], []
-        meta_ = {}
-        for meta_key in ['principal_point', 'focal_length', 'height', 'width', 
-                         'gender', 'track_id', 'frame_id', 'sequence_name', 'RT']:
-            meta_[meta_key] = []
+            smpl_dict[key] = []
 
-        seed = '240110'
-        size = 99
+        # prepare random id  list for track id
+        seed = metadata['date']
         random_ids = np.random.RandomState(seed=int(seed)).permutation(999999)
         used_id_num = 0
 
+        # dataset specific & test area
         skip_count = 0
-        # sort by se
         target_seqs = []
+
+
+        # ----------------parse dataset----------------
+
+        # parse sequences
+        seqs = glob.glob(os.path.join(dataset_path, 'P*', '*_*'))
 
         for seq in seqs:
             # track_id = random_ids[used_id_num]
