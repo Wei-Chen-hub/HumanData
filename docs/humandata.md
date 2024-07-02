@@ -55,7 +55,7 @@ Align with `HumanData['config']['path']`, for example
     os.path.join('<your dataset base dir>', HumanData['metadata']['dataset'], HumanData['path']['image'][0])
     ```
 
-## Human Pose and Shape- `HumanData['smpl']/['smplx']`
+## Human Pose and Shape - `HumanData['smpl']/['smplx']`
 
 A dict, which name aligns with config, in one of the following format:
 
@@ -84,7 +84,7 @@ A dict, which name aligns with config, in one of the following format:
 
 Some dataset with smplx annotations may not have all the keys, possible missing keys are marked with `*`.
 
-## Keypoint Annotations
+## Keypoint Annotations - `HumanData['keypoint']`
 
 Depending on the dataset, can include several keypoints, where K is the number of keypoints, and the last element of 3d keypoints is the confidence score.
 
